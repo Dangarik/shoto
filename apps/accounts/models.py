@@ -74,7 +74,7 @@ class Trainer(models.Model):
     )
 
     def __str__(self):
-        return f"Профіль тренера: {self.user.full_name or self.user.email}"
+        return self.user.full_name or self.user.email
 
     class Meta:
         verbose_name = _('Профіль тренера')

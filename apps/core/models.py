@@ -46,7 +46,7 @@ class Schedule(models.Model):
     trainer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True,
                                 related_name='trainer_schedule', verbose_name="Тренер")
 
-    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='training autor')
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='training_author')
 
     status = models.CharField(
         max_length=10,
