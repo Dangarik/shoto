@@ -1,0 +1,83 @@
+/* Загальні стилі */
+.container {
+    padding: 20px;
+    width: 50%; /* Середня ширина форми */
+    margin: 0 auto;
+    background-color: #fff; /* Білий фон */
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Легка тінь */
+    border: 1px solid #ccc; /* Легкий контур */
+}
+
+/* Стилі для полів введення */
+input[type=text], input[type=password], input[type=email] {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0 20px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 16px;
+}
+
+/* Стилі для кнопок */
+button {
+    background-color: #f1c40f; /* Жовтий колір */
+    color: #000; /* Чорний текст */
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 100%;
+    font-size: 16px;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #f39c12; /* Темніший жовтий */
+}
+
+.cancel {
+    width: auto;
+    padding: 10px 18px;
+    background-color: #e74c3c; /* Червоний */
+    color: #fff;
+}
+
+.cancel:hover {
+    background-color: #c0392b; /* Темніший червоний */
+}
+
+.reg-link {
+    display: block;
+    text-align: center;
+    margin-top: 16px;
+    color: #f1c40f; /* Жовтий колір */
+    text-decoration: none;
+}
+
+.reg-link:hover {
+    text-decoration: underline;
+}
+
+/* Стилі для заголовка */
+h2 {
+    text-align: center;
+    color: #000; /* Чорний колір заголовка */
+}
+
+/* Стилі для форми логіну */
+label {
+    font-size: 17px;
+    display: block;
+    color: #000; /* Чорний колір для тексту */
+}
+
+/* Адаптивність для мобільних пристроїв */
+@media screen and (max-width: 768px) {
+    .container {
+        width: 90%;
+    }
+}

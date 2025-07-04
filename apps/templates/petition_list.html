@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    {% load static %}
+
+    <link rel="stylesheet" href="{% static 'styles/petition_list.css' %}">
+    
+    <div class="petition-page">
+        <div class="petition-filters">
+            <h3>Фільтри</h3>
+            <form method="get" class="filter-form">
+                {% csrf_token %}
+
+                <div class="filter-category">
+                    <label for="id_category">Категорія</label>
+                    {{ form.category }}
+                </div>
+
+                <div class="filter-search">
+                    <label for="id_search_query">Пошук</label>
+                    {{ form.search_query }}
+                </div>
+
+                <div class="filter-sort">
+                    <label for="id_sort_by">Сортувати за</label>
+                    {{ form.sort_by }}
+                </div>
+                
+                <button type="submit" class="apply-filters-button">Застосувати</button>
+            </form>
+        </div>
+
+        <div class="petition-list">
+            {% for petition in petitions %}
+                <div class="petition-card">
+                    <div class="petition-title">
+                        <a href="{% url 'petition_detail' petition.id %}">{{ petition.title }}</a>
+                    </div>
+                    <div class="petition-description">
+                        {{ petition.text|truncatechars:400 }}
+                    </div>
+                    <hr>
+                    <div class="petition-footer">
+                        <a>Категорія: {{ petition.category }} </a> |
+                        <span>{{ petition.signatures }} підписів</span> |
+                        <a href="{% url 'petition_detail' petition.id %}" class="view-button">Дивитись</a>
+                    </div>
+                </div>
+            {% empty %}
+                <p>Немає петицій для відображення.</p>
+            {% endfor %}
+        </div>
+    </div>
+
+{% endblock %}

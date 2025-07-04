@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block content %}
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'styles/user/login.css' %}">
+    <form method="POST">
+        {% csrf_token %}
+        <div class="container">
+            <label for="username"><b>Ім'я користувача</b></label>
+            {{ form.username }}
+            {% for error in form.username.errors %}
+                <div class="alert alert-danger">{{ error }}</div>
+            {% endfor %}
+
+            <label for="password"><b>Пароль</b></label>
+            {{ form.password }}
+            {% for error in form.password.errors %}
+                <div class="alert alert-danger">{{ error }}</div>
+            {% endfor %}
+            <button type="submit">Увійти</button>
+
+        </div>
+    </form>
+
+
+
+    <div class="reg-container">
+    <button type="button" class="cancel" onclick="window.location.href='/'">Назад</button>
+        <a class="reg-link" href="{% url 'accounts:register' %}">Зареєструватись</a>
+    </div>
+{% endblock %}

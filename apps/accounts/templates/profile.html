@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block content %}
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'styles/user/profile.css' %}">
+    <div class="userinfo">
+        <h2>Профіль користувача</h2>
+
+        <img src="{% static 'img/avatar.png' %}" width="5%" alt="Аватар користувача">
+
+        <p><strong>Ім'я користувача:</strong> {{ request.user.username }}</p>
+
+        <p><strong>Пошта користувача:</strong> {{ request.user.email }}</p>
+
+        <a class="active" href="{% url 'users:logout' %}">Вийти</a>
+    </div>
+    <div class="userpetition">
+    <h3>Ваші петиції</h3>
+    <ul>
+        {% for petition in petitions %}
+            <li>
+                <a href="{% url 'petition_detail' petition.id %}">{{ petition.title }}</a> - {{ petition.status }}
+            <div class="petition-description">
+                        {{ petition.text|truncatechars:400 }}
+                    </div>
+
+                    <div class="petition-footer">
+                        <a>Категорія: {{ petition.category }} </a> |
+                        <span>{{ petition.signatures }} підписів</span> |
+                        <a href="{% url 'petition_detail' petition.id %}" class="view-button">Дивитись</a>
+                    </div>
+                <hr>
+            </li>
+        {% empty %}
+            <p>У вас немає петицій.</p>
+        {% endfor %}
+    </ul>>
+    </div>
+    </ul>
+{% endblock %}

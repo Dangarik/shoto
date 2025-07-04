@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ProstoPetition</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'styles/base.css' %}">
+    <style>
+
+    </style>
+</head>
+<body>
+    <h1>
+        <img src="{% static 'img/mainLogo.png' %}" width="5%" alt="Logo">
+        ProstoPetition - Електронні петиції
+        {% if user.is_authenticated %}
+            <div class="login">
+                <a class="log" href="{% url 'accounts:profile' %}">Профіль</a>
+            </div>
+        {% else %}
+            <div class="login">
+                <a class="log" href="{% url 'accounts:login' %}">Вхід</a>
+            </div>
+        {% endif %}
+    </h1>
+        <div class="links">
+            <a class="active" href="/">Всі петиції</a>
+            <a class="active" href="/active">Активні</a>
+            <a class="active" href="/inQue">На розгляді</a>
+            <a class="active" href="/answered">З відповіддю</a>
+            {% if user.is_authenticated %}
+                <a class="create" href="/create">Створити петицію</a>
+            {% endif %}
+        </div>
+    {% block content %}
+
+    {% endblock %}
+</body>
+</html>
