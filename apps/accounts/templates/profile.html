@@ -7,33 +7,43 @@
 
         <img src="{% static 'img/avatar.png' %}" width="5%" alt="Аватар користувача">
 
-        <p><strong>Ім'я користувача:</strong> {{ request.user.username }}</p>
+        {# --- Дані з моделі CustomUser --- #}
 
-        <p><strong>Пошта користувача:</strong> {{ request.user.email }}</p>
+        <p><strong>Ім'я користувача (логін):</strong> {{ request.user.username }}</p>
+        <p><strong>Електронна пошта:</strong> {{ request.user.email }}</p>
 
-        <a class="active" href="{% url 'users:logout' %}">Вийти</a>
+        {% if request.user.full_name %}
+            <p><strong>ПІБ:</strong> {{ request.user.full_name }}</p>
+        {% endif %}
+
+        {% if request.user.date_of_birth %}
+            <p><strong>Дата народження:</strong> {{ request.user.date_of_birth|date:"d.m.Y" }}</p>
+        {% endif %}
+
+        {% if request.user.phone_number %}
+            <p><strong>Контактний телефон:</strong> {{ request.user.phone_number }}</p>
+        {% endif %}
+
+        {% if request.user.gender %}
+            <p><strong>Стать:</strong> {{ request.user.get_gender_display }}</p>
+        {% endif %}
+
+        <p><strong>Статус/роль:</strong> {{ request.user.get_status_display }}</p>
+
+        {# --- Дані з успадкованої моделі AbstractUser --- #}
+        <p><strong>Дата реєстрації:</strong> {{ request.user.date_joined|date:"d.m.Y H:i" }}</p>
+
+        {% if request.user.last_login %}
+             <p><strong>Останній вхід:</strong> {{ request.user.last_login|date:"d.m.Y H:i" }}</p>
+        {% endif %}
+
+        <br>
+        <a class="active" href="{% url 'accounts:logout' %}">Вийти</a>
+        <a class="active" href="{% url 'accounts:change_account_details' %}">Змінити дані</a>
     </div>
+
     <div class="userpetition">
-    <h3>Ваші петиції</h3>
-    <ul>
-        {% for petition in petitions %}
-            <li>
-                <a href="{% url 'petition_detail' petition.id %}">{{ petition.title }}</a> - {{ petition.status }}
-            <div class="petition-description">
-                        {{ petition.text|truncatechars:400 }}
-                    </div>
-
-                    <div class="petition-footer">
-                        <a>Категорія: {{ petition.category }} </a> |
-                        <span>{{ petition.signatures }} підписів</span> |
-                        <a href="{% url 'petition_detail' petition.id %}" class="view-button">Дивитись</a>
-                    </div>
-                <hr>
-            </li>
-        {% empty %}
-            <p>У вас немає петицій.</p>
-        {% endfor %}
-    </ul>>
+        <h3>Ваші Тренування</h3>
+        {# Тут буде логіка для відображення тренувань #}
     </div>
-    </ul>
 {% endblock %}

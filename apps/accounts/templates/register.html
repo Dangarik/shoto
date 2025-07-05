@@ -1,40 +1,38 @@
 {% extends "base.html" %}
 {% block content %}
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'styles/user/register.css' %}">
+
     <form method="POST">
-        {% load static %}
-        <link rel="stylesheet" href="{% static 'styles/user/register.css' %}">
         {% csrf_token %}
         <div class="container">
-            <label for="username"><b>Ім'я користувача</b></label>
-            {{ form.username }}
-            {% for error in form.username.errors %}
-                <div class="alert alert-danger">{{ error }}</div>
+
+            {# Django автоматично пройдеться по всіх полях, визначених у формі #}
+            {% for field in form %}
+                <div class="form-group mb-3">
+                    {{ field.label_tag }}  {# Виводить <label> для поля #}
+                    {{ field }}            {# Виводить саме поле вводу (input, select, etc.) #}
+
+                    {# Показуємо помилки, якщо вони є для цього поля #}
+                    {% for error in field.errors %}
+                        <div class="alert alert-danger mt-1">{{ error }}</div>
+                    {% endfor %}
+                </div>
             {% endfor %}
 
-            <label for="email"><b>Електронна пошта</b></label>
-            {{ form.email }}
-            {% for error in form.email.errors %}
-                <div class="alert alert-danger">{{ error }}</div>
-            {% endfor %}
-
-            <label for="password1"><b>Пароль</b></label>
-            {{ form.password1 }}
-            {% for error in form.password1.errors %}
-                <div class="alert alert-danger">{{ error }}</div>
-            {% endfor %}
-
-            <label for="password2"><b>Підтвердження пароля</b></label>
-            {{ form.password2 }}
-            {% for error in form.password2.errors %}
-                <div class="alert alert-danger">{{ error }}</div>
-            {% endfor %}
+            {# Виводимо загальні помилки форми (не прив'язані до конкретного поля) #}
+            {% if form.non_field_errors %}
+                {% for error in form.non_field_errors %}
+                     <div class="alert alert-danger">{{ error }}</div>
+                {% endfor %}
+            {% endif %}
 
             <button type="submit">Зареєструватися</button>
         </div>
     </form>
 
     <div class="container" style="background-color:#f9f9f9">
-        <a href="{% url 'users:login' %}" class="reg-link">Вхід</a>
+        <a href="{% url 'accounts:login' %}" class="reg-link">Вже є акаунт? Увійти</a>
         <button type="button" class="cancel" onclick="window.location.href='/'">Назад</button>
     </div>
 {% endblock %}

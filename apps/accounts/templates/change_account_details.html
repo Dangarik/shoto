@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% block content %}
+{% load static %}
+{# Можна підключити окремий CSS для форми, якщо потрібно #}
+<link rel="stylesheet" href="{% static 'styles/user/form.css' %}">
+
+<div class="form-container">
+    <h2>Змінити дані профілю</h2>
+
+    {# Дуже важливо! Атрибут method="post" для відправки даних на сервер #}
+    <form method="post" novalidate>
+        {# Захист від CSRF-атак, обов'язковий для Django форм #}
+        {% csrf_token %}
+
+        {# --- Блок для зміни особистих даних --- #}
+        <fieldset>
+            <legend>Особисті дані</legend>
+
+            {# Відображення загальних помилок форми, якщо вони є #}
+            {% if form.non_field_errors %}
+                <div class="form-errors">
+                    {{ form.non_field_errors }}
+                </div>
+            {% endif %}
+
+            <div class="form-group">
+                <label for="{{ form.full_name.id_for_label }}">ПІБ:</label>
+                {{ form.full_name }}
+                {% if form.full_name.errors %}
+                    <div class="field-errors">{{ form.full_name.errors }}</div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.date_of_birth.id_for_label }}">Дата народження:</label>
+                {# Для поля дати краще використовувати input type="date" у віджеті форми #}
+                {{ form.date_of_birth }}
+                 {% if form.date_of_birth.errors %}
+                    <div class="field-errors">{{ form.date_of_birth.errors }}</div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.gender.id_for_label }}">Стать:</label>
+                {{ form.gender }}
+                {% if form.gender.errors %}
+                    <div class="field-errors">{{ form.gender.errors }}</div>
+                {% endif %}
+            </div>
+        </fieldset>
+
+        {# --- Блок для зміни пароля --- #}
+        <fieldset>
+            <legend>Зміна пароля (заповнюйте, тільки якщо хочете змінити)</legend>
+
+            {% if form.non_field_errors %}
+                <div class="form-errors">
+                    {{ form.non_field_errors }}
+                </div>
+            {% endif %}
+
+            <div class="form-group">
+                <label for="{{ form.old_password.id_for_label }}">Старий пароль:</label>
+                {{ form.old_password }}
+                {% if form.old_password.errors %}
+                    <div class="field-errors">{{ form.old_password.errors }}</div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.new_password1.id_for_label }}">Новий пароль:</label>
+                {{ form.new_password1 }}
+                {% if form.new_password1.errors %}
+                    <div class="field-errors">{{ form.new_password1.errors }}</div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.new_password2.id_for_label }}">Повторіть новий пароль:</label>
+                {{ form.new_password2 }}
+                {% if form.new_password2.errors %}
+                    <div class="field-errors">{{ form.new_password2.errors }}</div>
+                {% endif %}
+            </div>
+        </fieldset>
+
+        <br>
+        <button type="submit" class="active">Зберегти зміни</button>
+        <a href="{% url 'accounts:profile' %}" style="margin-left: 15px;">Скасувати</a>
+
+    </form>
+</div>
+
+{% endblock %}

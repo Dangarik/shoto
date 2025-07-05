@@ -1,10 +1,78 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+{% extends "base.html" %}
+{% block content %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'styles/training_detail.css' %}">
+
+<div class="training-detail">
+
+    <h2>{{ training.training_type.name }}</h2>
+
+    <div class="training-meta">
+        <p><strong>Тренер:</strong> {{ trainer_info.user.full_name}}</p>
+        <p><strong>Зал:</strong> {{ training.hall.name }}</p>
+        <p><strong>День та час:</strong> {{ training.get_day_of_week_display }}, {{ training.start_time|time:"H:i" }} - {{ training.end_time|time:"H:i" }}</p>
+        <p><strong>Статус:</strong> <span class="status-{{ training.status|lower }}">{{ training.get_status_display }}</span></p>
+    </div>
+
+    <hr>
+
+    <h3>Опис тренування</h3>
+
+    <p>{{ training_type.name|linebreaks }}</p>
+    <p>{{ training_type.about|linebreaks }}</p>
+
+    <hr>
+
+    <div class="enrollment-section">
+        <p class="capacity">
+            <strong>Записано: {{ training.capacity }} / {{ training.max_capacity }}</strong>
+        </p>
+
+        {% if user.is_authenticated %}
+            {% if training.status == 'Started' %}
+                {% if user_is_registered %}
+                        <form action="{% url 'core:cancel_training_record' schedule_id=training.id %}" method="post">
+                            {% csrf_token %}
+                        <p>Ви вже записані на це тренування.</p>
+                        <button type="submit" class="btn btn-success">Скасувати запис</button>
+                    </form>
+                {% else %}
+                         <form action="{% url 'core:record_on_training' schedule_id=training.id %}" method="post">
+                             {% csrf_token %}
+                        <button type="submit" class="btn btn-success">Записатися</button>
+                    </form>
+                {% endif %}
+
+            {% elif training.status == 'Full' %}
+            <div class="message info">
+                   <p>На жаль, усі місця на це тренування вже зайняті.</p>
+                   {% if user_is_registered %}
+                         <form action="{% url 'core:cancel_training_record' schedule_id=training.id %}" method="post">
+                             {% csrf_token %}
+                        <button type="submit" class="btn btn-success">Скасувати запис</button>
+                   {% endif %}
+                </div>
+
+            {% else %}
+                <div class="message disabled">
+                    <p>Запис на це тренування завершено.</p>
+                </div>
+            {% endif %}
+        {% else %}
+            <div class="not-authenticated">
+                <p>Щоб записатись на тренування, будь ласка, <a href="{% url 'login' %}">увійдіть в систему</a>.</p>
+            </div>
+        {% endif %}
+    </div>
+
+    {% if user == training.trainer or user.is_staff %}
+                 <form action="{% url 'core:delete_training' schedule_id=training.id %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">Видалити</button>
+            </form>
+        </div>
+    {% endif %}
+
+    <a href="/">На головну</a>
+</div>
+{% endblock %}

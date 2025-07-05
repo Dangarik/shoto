@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.conf import settings
 import datetime
@@ -43,8 +44,15 @@ class Schedule(models.Model):
     day_of_week = models.IntegerField(choices=day_choices, verbose_name="День тижня")
     start_time = models.TimeField(verbose_name="Час початку")
     end_time = models.TimeField(verbose_name="Час закінчення")
-    trainer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True,
-                                related_name='trainer_schedule', verbose_name="Тренер")
+    trainer = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='trainer_schedule',
+        verbose_name="Тренер",
+        limit_choices_to={'status': 'trainer'}
+    )
 
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='training_author')
 
@@ -55,9 +63,20 @@ class Schedule(models.Model):
             ('Full', 'Заповнено'),
             ('Ongoing', 'Триває'),
             ('Finished', 'Закінчилося'),
+            ('Canceled', 'Скасовано'),
         ],
         default='Started'
     )
+    def clean(self):
+        """
+        Перевіримо щоб не можна було зробити більше мість ніж вмістить зал
+        """
+        if self.hall and self.max_capacity is not None:
+            if self.max_capacity > self.hall.capacity:
+                raise ValidationError({
+                    'capacity': f'Кількість записаних ({self.max_capacity}) не може перевищувати місткість залу «{self.hall.name}» ({self.hall.capacity}).'
+                })
+
     def __str__(self):
         training_name = self.training_type.name if self.training_type else "Вільно"
         return f"{self.get_day_of_week_display()} ({self.start_time:%H:%M}) в залі '{self.hall.name}': {training_name}"
@@ -69,7 +88,6 @@ class Schedule(models.Model):
             days_ahead += 7
         training_date = today + datetime.timedelta(days=days_ahead)
         training_datetime = datetime.datetime.combine(training_date, self.start_time)
-        # Робимо datetime об'єкт обізнаним про часову зону
         return timezone.make_aware(training_datetime, timezone.get_current_timezone())
 
     class Meta:

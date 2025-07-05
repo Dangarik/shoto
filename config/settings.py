@@ -58,7 +58,7 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-            'apps/core/templates',
+            #'apps/core/templates',
             'apps/accounts/templates',
             'apps/templates',
         ],
@@ -109,7 +109,7 @@ AUTH_USER_MODEL = 'accounts.CustomUser'
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'uk-ua'
 
 TIME_ZONE = 'UTC'
 
@@ -136,26 +136,4 @@ STATICFILES_DIRS = [
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-Q_CLUSTER = {
-    'name': 'myproject',
-    'workers': 1,  # Кількість воркерів
-    'timeout': 20,  # Максимальний час виконання завдання в секундах
-    'retry': 120,  # Час у секундах перед повторною спробою
-    'queue_limit': 50,
-    'bulk': 10,
-    'orm': 'default',
-
-    'schedules': [
-        {
-
-            'func': 'tasks.update_training_status',
-
-            # 'schedule_type': 'I' - інтервал
-            # 'minutes': 1 - запускати кожну хвилину
-            #
-            # Або можна використовувати cron:
-            'schedule_type': 'C',
-            'cron': '*/1 * * * *'  # Кожну хвилину
-        }
-    ]
-}
+LOGIN_URL = 'accounts:login'

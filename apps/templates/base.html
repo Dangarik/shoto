@@ -24,12 +24,13 @@
         {% endif %}
     </h1>
         <div class="links">
-            <a class="active" href="/">Всі петиції</a>
-            <a class="active" href="/active">Активні</a>
-            <a class="active" href="/inQue">На розгляді</a>
-            <a class="active" href="/answered">З відповіддю</a>
-            {% if user.is_authenticated %}
-                <a class="create" href="/create">Створити петицію</a>
+            <a class="active" href="/">Головна</a>
+            <a class="active" href="/trainers">Записатись до тренера</a>
+            <a class="active" href="/group">Групові заняття</a>
+            <a class="active" href="/halls">Зали</a>
+            <a class="active" href="/type">Типи занять</a>
+            {% if user.is_authenticated and user.status != "user" %}
+                <a class="create" href="/training/create/">Графік</a>
             {% endif %}
         </div>
     {% block content %}

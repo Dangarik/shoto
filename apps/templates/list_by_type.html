@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% block content %}
+    {% load static %}
+
+    <link rel="stylesheet" href="{% static 'styles/item_list.css' %}">
+
+    <div class="page-container">
+
+        {# Виводимо динамічний заголовок зі view #}
+        <h1 class="page-title">{{ title }}</h1>
+
+        <div class="item-list">
+            {# Тепер цикл буде працювати, оскільки view передає 'items' #}
+            {% for item in items %}
+                <div class="item-card">
+
+
+                    {# Перевіряємо, чи існує фото, перед тим як його виводити #}
+                    {% if item.photo %}
+                        <div class="item-photo-container">
+                            <img src="{{ item.photo.url }}" alt="Фото {{ item.user.full_name }}" class="item-photo">
+                        </div>
+                    {% endif %}
+
+                    <div class="item-content">
+                        {# Назва, ймовірно, є у всіх моделей #}
+                        <h3 class="item-title">{{ item.user.full_name }}</h3>
+                        <h3 class="item-title">{{ item.name }}</h3>
+
+
+
+                        {# Перевіряємо, чи є опис #}
+                        {% if item.about %}
+                            <p class="item-about">{{ item.about }}</p>
+                            <hr>
+                        {% endif %}
+                        {% if item.user.phone_number %}
+                            <p class="item-details"><strong>Телефон:</strong> {{ item.user.phone_number }}</p>
+                        {% endif %}
+                        <div class="item-details">
+                            {# Перевіряємо, чи є у моделі атрибут "capability" #}
+                            {% if item.capacity %}
+                                <p><strong>👥 Місткість:</strong> {{ item.capacity }}</p>
+                            {% endif %}
+
+                            {# Перевіряємо, чи є у моделі атрибут "specializations" #}
+                            {% if item.specializations %}
+                                {% if item.specializations.all %}
+                                    <div class="item-specializations">
+                                        <strong>Спеціалізації:</strong>
+                                        <ul>
+                                            {% for spec in item.specializations.all %}
+                                                <li>{{ spec.name }}</li>
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                {% endif %}
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            <a class="active" href="/type">Кнопка</a>
+            <div class="details">
+            {% empty %}
+                {# Це повідомлення тепер буде показуватись коректно, якщо запит до бази даних нічого не повернув #}
+                <div class="no-items">
+                    <p>На жаль, нічого не знайдено.</p>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="petition-footer">
+
+        </div>
+    </div>
+
+{% endblock %}

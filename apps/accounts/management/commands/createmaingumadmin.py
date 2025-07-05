@@ -14,7 +14,7 @@ class Command(BaseCommand):
         date_of_birth = input("Date of birth (YYYY-MM-DD): ")
         phone_number = input("Phone number: +380")
         gender = "default"
-        status = "main manager"
+
         while True:
             password = getpass.getpass('Password: ')
             password2 = getpass.getpass('Password (again): ')
@@ -32,6 +32,7 @@ class Command(BaseCommand):
             date_of_birth=date_of_birth,
             phone_number=phone_number,
         )
+        user.status = "main manager"
         user.is_staff = True
         user.is_superuser = True
         user.save()

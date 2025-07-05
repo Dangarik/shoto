@@ -2,6 +2,8 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
+
+
 class Status(models.TextChoices):
     USER = 'user', _('Користувач')
     TRAINER = 'trainer', _('Тренер')
@@ -11,6 +13,7 @@ class Status(models.TextChoices):
 class Gender(models.TextChoices):
     MALE = 'MALE', _('Чоловік')
     FEMALE = 'FEMALE', _('Жінка')
+    UNDIFINED ='UNDIFINED', _('Не визначено')
 
 class CustomUser(AbstractUser):
     email = models.EmailField(
@@ -29,7 +32,7 @@ class CustomUser(AbstractUser):
         blank=True
     )
     status = models.CharField(
-        _("Статус/роль"),
+        _("Статус"),
         max_length=20,
         choices=Status.choices,
         default=Status.USER
@@ -44,6 +47,7 @@ class CustomUser(AbstractUser):
 
 class Specialization(models.Model):
     name = models.CharField(max_length=100, unique=True, verbose_name="Назва спеціалізації")
+    about = models.CharField(max_length=255, unique=True, verbose_name="Опис")
 
     def __str__(self):
         return self.name
@@ -66,12 +70,6 @@ class Trainer(models.Model):
         verbose_name=_("Спеціалізації")
     )
 
-    working_hours = models.CharField(
-        max_length=255,
-        verbose_name=_("Час роботи"),
-        help_text=_("Наприклад: Пн-Пт, 09:00-19:00"),
-        blank=True
-    )
 
     def __str__(self):
         return self.user.full_name or self.user.email

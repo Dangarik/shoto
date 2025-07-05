@@ -13,8 +13,8 @@ class Command(BaseCommand):
         full_name = input("Full name:")
         date_of_birth = input("Date of birth (YYYY-MM-DD): ")
         phone_number = input("Phone number: +380")
-        gender = ("default")
-        status = ("manager")
+        gender = "default"
+        status = "manager"
         while True:
             password = getpass.getpass('Password: ')
             password2 = getpass.getpass('Password (again): ')

@@ -1,53 +1,82 @@
 {% extends 'base.html' %}
-
 {% block content %}
     {% load static %}
 
-    <link rel="stylesheet" href="{% static 'styles/petition_list.css' %}">
-    
-    <div class="petition-page">
-        <div class="petition-filters">
-            <h3>Фільтри</h3>
+    {# Рекомендую перейменувати CSS-файл для відповідності, наприклад, на training_list.css #}
+    <link rel="stylesheet" href="{% static 'styles/training_list.css' %}">
+
+        <div class="training-page">
+            <div class="training-filters">
+            <h3>🗓️ Фільтри та сортування</h3>
             <form method="get" class="filter-form">
-                {% csrf_token %}
 
-                <div class="filter-category">
-                    <label for="id_category">Категорія</label>
-                    {{ form.category }}
+                <div class="filter-group">
+                    <label for="id_day_of_week">День тижня</label>
+                    {{ form.day_of_week }}
                 </div>
 
-                <div class="filter-search">
-                    <label for="id_search_query">Пошук</label>
-                    {{ form.search_query }}
+                <div class="filter-group">
+                    <label for="id_training_type">Тип тренування</label>
+                    {{ form.training_type }}
                 </div>
 
-                <div class="filter-sort">
+                <div class="filter-group">
+                    <label for="id_hall">Зал</label>
+                    {{ form.hall }}
+                </div>
+
+                <div class="filter-group">
                     <label for="id_sort_by">Сортувати за</label>
                     {{ form.sort_by }}
                 </div>
-                
+
+                <div class="filter-group">
+                    <label for="id_trainer">Тренер</label>
+                    {{ form.trainer }}
+                </div>
+
                 <button type="submit" class="apply-filters-button">Застосувати</button>
             </form>
         </div>
 
-        <div class="petition-list">
-            {% for petition in petitions %}
-                <div class="petition-card">
-                    <div class="petition-title">
-                        <a href="{% url 'petition_detail' petition.id %}">{{ petition.title }}</a>
+        <div class="training-list">
+            {% for schedule in schedules %}
+                <div class="training-card">
+                    <div class="training-header">
+                        {# Виводимо назву тренування та посилання на його детальну сторінку #}
+                        <h4 class="training-title">
+                            {#<a href="{% url 'schedule_detail' schedule.id %}">#}
+                                {{ schedule.training_type.name|default:"Вільне заняття" }}
+                            {# </a>#}
+                        </h4>
+                        {# Використовуємо метод моделі для відображення дня тижня #}
+                        <span class="training-day">{{ schedule.get_day_of_week_display }}</span>
                     </div>
-                    <div class="petition-description">
-                        {{ petition.text|truncatechars:400 }}
+
+                    <div class="training-details">
+                        <p><strong>🕒 Час:</strong> {{ schedule.start_time|time:"H:i" }} - {{ schedule.end_time|time:"H:i" }}</p>
+
+                        <p><strong>🏋️ Тренер:</strong> {{ schedule.trainer.full_name|default:"Не призначено" }}</p>
+
+                        <p><strong>📍 Зал:</strong> {{ schedule.hall.name }}</p>
                     </div>
+
                     <hr>
-                    <div class="petition-footer">
-                        <a>Категорія: {{ petition.category }} </a> |
-                        <span>{{ petition.signatures }} підписів</span> |
-                        <a href="{% url 'petition_detail' petition.id %}" class="view-button">Дивитись</a>
+                    <div class="training-footer">
+                        <span class="training-status training-status-{{ schedule.status|lower }}">
+                            Статус: {{ schedule.get_status_display }}
+                        </span>
+                        <span class="training-capacity">
+                            Записано: {{ schedule.capacity }} / {{ schedule.max_capacity }}
+                        </span>
+                        {# Посилання на детальну сторінку, припускаючи, що URL називається 'schedule_detail' #}
+                        <a href="/training/{{ schedule.id }}/">Детальніше</a>
                     </div>
                 </div>
             {% empty %}
-                <p>Немає петицій для відображення.</p>
+                <div class="no-trainings">
+                    <p>На жаль тренувань не знайдено.</p>
+                </div>
             {% endfor %}
         </div>
     </div>
